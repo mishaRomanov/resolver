@@ -5,6 +5,8 @@ use std::net;
 struct Environmentals {
     // Default if 8.8.8.8 - Public Google DNS server.
     dns_server: String,
+    // Default if 5050.
+    udp_socket_port: u16,
 }
 impl Environmentals {
     fn parse() -> Environmentals {
@@ -12,17 +14,15 @@ impl Environmentals {
         // Might create some more variables later so it should be useful in the future.
         dotenv::dotenv().ok();
 
-        // Parsing ip addr of DNS server from environment.
-        match std::env::var("DNS_SERVER") {
-            Ok(server) => Environmentals { dns_server: server },
-            Err(_e) => {
-                eprintln!(
-                    "failed to parse dns_server env variable. setting default one. 8.8.8.8...."
-                );
-                Environmentals {
-                    dns_server: "8.8.8.8".to_string(),
-                }
-            }
+        let dns_server: String = std::env::var("DNS_SERVER").unwrap_or("8.8.8.8".to_string());
+        let udp_socket_port: u16 = std::env::var("UDP_SOCKET_PORT")
+            .unwrap_or("5050".to_string())
+            .parse()
+            .unwrap();
+
+        Environmentals {
+            dns_server,
+            udp_socket_port,
         }
     }
 }
@@ -30,7 +30,8 @@ impl Environmentals {
 // I dunno yet just decided to group information like that for now.
 #[derive(Debug, Clone, Copy)]
 pub struct ParamsContainer {
-    pub v4_socket_addr: net::SocketAddrV4,
+    pub dns_server_addr: net::SocketAddrV4,
+    pub udp_socket_port: u16,
 }
 
 impl ParamsContainer {
@@ -42,7 +43,8 @@ impl ParamsContainer {
             .parse::<net::Ipv4Addr>()
             .expect("failed to parse DNS's IP addr");
         ParamsContainer {
-            v4_socket_addr: net::SocketAddrV4::new(ip_addr, 53),
+            dns_server_addr: net::SocketAddrV4::new(ip_addr, 53),
+            udp_socket_port: envs.udp_socket_port,
         }
     }
 }

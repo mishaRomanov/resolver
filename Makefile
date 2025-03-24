@@ -1,2 +1,3 @@
 run: 
-DNS_SERVER='8.8.8.8' cargo run 
+	# Sudo is required to bind a socket.
+	sudo cargo run 
