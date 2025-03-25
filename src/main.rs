@@ -26,11 +26,12 @@ fn main() {
     // Let's try to bind a socket and connect to external address.
     match net::UdpSocket::bind(format!("127.0.0.1:{}", container.udp_socket_port)) {
         Ok(socket) => {
-            match socket.set_read_timeout(Some(Duration::from_secs(3))) {
-                Ok(_) => println!("success"),
-                Err(e) => eprintln!("{e}"),
-            };
+            socket
+                .set_read_timeout(Some(Duration::from_secs(3)))
+                .expect("failed to set read timeout.");
+
             println!("using {}", socket.local_addr().unwrap());
+
             socket
                 .set_nonblocking(false)
                 .expect("failed to set nonblocking");
@@ -44,12 +45,15 @@ fn main() {
 
             // Fails. failed to send packets to DNS server: Can't assign requested address (os error 49)
             // TODO: figure out why
-            match socket.send(&query_as_bytes) {
-                Ok(bytes) => {
-                    println!("successfully sent a packet {bytes} bytes long.")
-                }
-                Err(e) => eprintln!("failed to send packets to DNS server: {e}"),
-            }
+            socket
+                .send(&query_as_bytes)
+                .expect("failed to send packets to DNS server");
+
+            // Creating a buffer.
+            let mut buf: Vec<u8> = vec![0; 1024];
+            socket
+                .recv(&mut buf)
+                .expect("failed to receive packets from DNS server");
         }
         Err(e) => eprintln!("{e}"),
     }
