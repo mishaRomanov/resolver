@@ -31,7 +31,7 @@ impl Environmentals {
 #[derive(Debug, Clone, Copy)]
 pub struct ParamsContainer {
     pub dns_server_addr: net::SocketAddrV4,
-    pub udp_socket_port: u16,
+    pub local_udp_socket_port: u16,
 }
 
 impl ParamsContainer {
@@ -44,7 +44,7 @@ impl ParamsContainer {
             .expect("failed to parse DNS's IP addr");
         ParamsContainer {
             dns_server_addr: net::SocketAddrV4::new(ip_addr, 53),
-            udp_socket_port: envs.udp_socket_port,
+            local_udp_socket_port: envs.udp_socket_port,
         }
     }
 }
