@@ -12,7 +12,7 @@ Where `-i` is a flag that specifies the IP version and `-d` is a flag that speci
 
 Output should look like this: 
 ```bash
-using 0.0.0.0:5768 as DNS server
+using 0.0.0.0:5768 
 asking 1.1.1.1:53 for bbc.com...
 answer:
 IPv4: 151.101.0.81
@@ -20,3 +20,10 @@ IPv4: 151.101.64.81
 IPv4: 151.101.128.81
 IPv4: 151.101.192.81
 ``` 
+
+Desirable DNS Server and UDP port are set in `.env` file:
+```bash
+DNS_SERVER=1.1.1.1
+UDP_SOCKET_PORT=5768
+```
+Default DNS Server is `8.8.8.8` by Google.

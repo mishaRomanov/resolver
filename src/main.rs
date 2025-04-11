@@ -28,7 +28,7 @@ fn main() {
                 .set_read_timeout(Some(Duration::from_secs(3)))
                 .expect("failed to set read timeout.");
 
-            println!("using {} as DNS server", socket.local_addr().unwrap());
+            println!("using {} to bind UDP socket", socket.local_addr().unwrap());
 
             socket
                 .set_nonblocking(false)
