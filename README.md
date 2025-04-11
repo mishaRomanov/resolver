@@ -4,12 +4,10 @@ This small project is made exclusively out of my curiosity and desire to learn r
 ## Usage
 For now, it works on macOS. You can run it with the following command:
 ```bash
-sudo cargo build 
+make build 
 
-target/debug/resolver -i v4 -d bbc.com
+make run ipkind=4 domain=bbc.com
 ```
-Where `-i` is a flag that specifies the IP version and `-d` is a flag that specifies the domain name to resolve.
-
 Output should look like this: 
 ```bash
 using 0.0.0.0:5768 
